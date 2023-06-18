@@ -6,44 +6,30 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chat.MainActivity
-import com.example.chat.R
+import com.example.chat.databinding.ActivitySignInBinding
 import com.google.firebase.auth.FirebaseAuth
 
 class SignInActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivitySignInBinding;
     private lateinit var mAuth: FirebaseAuth;
-
-    private lateinit var textInputEmail: EditText;
-    private lateinit var textInputPassword: EditText;
-    private lateinit var buttonSignIn: Button;
-    private lateinit var buttonSignUp: Button;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_in)
+        binding = ActivitySignInBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         mAuth = FirebaseAuth.getInstance()
 
-        textInputEmail = findViewById(R.id.email_input)
-        textInputPassword = findViewById(R.id.password_input)
-        buttonSignIn = findViewById(R.id.button_sign_in)
-        buttonSignUp = findViewById(R.id.button_sign_up)
-
-        buttonSignUp.setOnClickListener {
-            val intent = Intent(this, SignUpActivity::class.java)
-            startActivity(intent)
+        binding.buttonSignUp.setOnClickListener {
+            onClickSignUp()
         }
 
-        buttonSignIn.setOnClickListener {
-            val email = textInputEmail.text.toString()
-            val password = textInputPassword.text.toString()
-
-            login(email, password)
+        binding.buttonSignIn.setOnClickListener {
+            onClickSignIn()
         }
     }
 
@@ -60,25 +46,40 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    private fun login(email: String, password: String) {
-        Log.d("[login]", email + password)
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
-            if (task.isSuccessful) {
-                Toast.makeText(
-                    baseContext,
-                    "Authentication successful.",
-                    Toast.LENGTH_SHORT,
-                ).show()
+    private fun onClickSignUp() {
+        val intent = Intent(this, SignUpActivity::class.java)
+        startActivity(intent)
+    }
 
-                val intent = Intent(this@SignInActivity, MainActivity::class.java)
-                startActivity(intent)
-            } else {
-                Toast.makeText(
-                    baseContext,
-                    "Authentication failed.",
-                    Toast.LENGTH_SHORT,
-                ).show()
+    private fun onClickSignIn() {
+        val email = binding.emailInput.text.toString()
+        val password = binding.passwordInput.text.toString()
+
+        Log.d(TAG, "These are $email/$password")
+
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(
+                        baseContext,
+                        "Authentication successful.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+
+                    val intent = Intent(this@SignInActivity, MainActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(
+                        baseContext,
+                        "Authentication failed.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
             }
         }
+    }
+
+    companion object {
+        const val TAG: String = "SIGN_IN_ACTIVITY"
     }
 }
