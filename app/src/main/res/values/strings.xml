@@ -3,6 +3,9 @@
     <string name="sign_in_page_logo">Sign In Page Logo</string>
     <string name="enter_your_email">Enter your email</string>
     <string name="enter_your_password">Enter your password</string>
+    <string name="confirm_your_password">Confirm your password</string>
     <string name="btn_sign_in">Sign In</string>
     <string name="btn_sign_up">Sign Up</string>
+    <string name="btn_register">Register</string>
+    <string name="sign_in_page_title">Sign In</string>
 </resources>

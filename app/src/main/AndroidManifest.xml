@@ -21,6 +21,7 @@
 
         <activity
                 android:name=".activities.SignUpActivity"
+                android:label="@string/sign_in_page_title"
                 android:exported="false" />
         <activity
                 android:name=".activities.SignInActivity"
